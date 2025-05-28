@@ -1,5 +1,12 @@
 # secure-pdf
 
+## contribute
+
+1. clone
+2. `source venv/bin/activate`
+3. code
+4. Add your findings about suspicious pdfs and how to stop them in the doc
+
 ## suspicious pdf file attributes
 
 1. The two following indicate that the PDF document contains JavaScript. Almost all malicious PDF documents that I’ve found in the wild contain JavaScript (to exploit a JavaScript vulnerability and/or to execute a heap spray). Of course, you can also find JavaScript in PDF documents without malicious intend.
