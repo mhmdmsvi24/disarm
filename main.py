@@ -1,10 +1,20 @@
 import argparse
 import subprocess
+import sys
 from pathlib import Path
 
-parser = argparse.ArgumentParser(
+
+class CustomArgumentParser(argparse.ArgumentParser):
+    def error(self, message):
+        print(f"Error: {message}")
+        self.print_help()
+        sys.exit(2)
+
+
+parser = CustomArgumentParser(
     description="Scans PDFs for any malicious activity to triage and \
-                                 analyze them"
+                                 analyze them",
+    usage="%(prog)s [options] source_file",
 )
 
 #  positional arguments
@@ -12,8 +22,7 @@ parser.add_argument(
     "-l",
     "--level",
     type=int,
-    help="security severity level, minimum of 1 and maximum of 3 the higher the stricter the \
-        program will be, defaults to 2",
+    help="security severity level, minimum of 1 and maximum of 3. The higher the stricter the program will be, defaults to 2",
     default=2,
     choices=[1, 2, 3],
 )
@@ -30,13 +39,11 @@ parser.add_argument(
     "-w",
     "--watch",
     type=str,
-    help="Path to the PDF directory you want to watch to scan and secure PDFs e.g. Downlowds \
-        folder so any fresh document will be scanned as fast as possible",
+    help="Path to the PDF directory you want to watch to scan and secure PDFs",
 )
 
-# Optional options
 parser.add_argument(
-    "-v", "-verbose", action="store_true", help="provide operation information"
+    "-v", "--verbose", action="store_true", help="provide operation information"
 )
 
 # Parsed arguments
@@ -47,11 +54,16 @@ directory_path = args.directory
 file_path = args.file
 watch = args.watch
 
+
+if (file_path or directory_path) or watch:
+    parser.error(
+        "incompatible options: file & directory or watch can't be used at the same time"
+    )
+
+# test files
 # "2024_Roadmap_02-24_v1.pdf"
 # "Chris Kubecka - Hack The World with OSINT-HypaSec (2019).pdf"
 
-if ((file_path or directory_path) and watch):
-    raise ValueError("incompatible options: file & directory or watch")
 
 print(level, directory_path, file_path, watch)
 
@@ -86,7 +98,7 @@ def level_1(dict):
     threats_found = {}
     threats = 0
 
-    print("Hunting Basic Threats...\n")
+    print("Hunting Basic Level 1 Threats...\n")
     for key in suspicious_keys:
         count = dict.get(key, 0)
         if count > 0:
@@ -99,7 +111,8 @@ def level_1(dict):
         print("Suspicous Items Found:\n")
 
 
-level_1(keyword_counts)
+if level == 1:
+    level_1(keyword_counts)
 
 # for keyword in keyword_counts:
 #     print(keyword, keyword_counts[keyword])
