@@ -23,7 +23,7 @@ parser.add_argument(
     "--level",
     type=int,
     help="security severity level, minimum of 1 and maximum of 3. The higher the stricter the program will be, defaults to 2",
-    default=2,
+    default=1,
     choices=[1, 2, 3],
 )
 
@@ -55,21 +55,20 @@ file_path = args.file
 watch = args.watch
 
 
-if (file_path or directory_path) or watch:
+if (
+    (file_path and directory_path)
+    or (watch and file_path)
+    or (watch and directory_path)
+):
     parser.error(
         "incompatible options: file & directory or watch can't be used at the same time"
     )
-
-# test files
-# "2024_Roadmap_02-24_v1.pdf"
-# "Chris Kubecka - Hack The World with OSINT-HypaSec (2019).pdf"
-
 
 print(level, directory_path, file_path, watch)
 
 file_path = Path.home() / file_path
 command = subprocess.run(
-    ["python3", "pdfid/pdfid/pdfid.py", file_path], capture_output=True, text=True
+    ["python3", "pdfid", file_path], capture_output=True, text=True
 )
 
 data_lines = command.stdout.splitlines()[2:]
