@@ -49,46 +49,50 @@ parser.add_argument(
 # Parsed arguments
 args = parser.parse_args()
 
-level = args.level
-directory_path = args.directory
-file_path = args.file
-watch = args.watch
+level_arg = args.level
+directory_path_arg = args.directory
+file_path_arg = args.file
+watch_arg = args.watch
 
 
 if (
-    (file_path and directory_path)
-    or (watch and file_path)
-    or (watch and directory_path)
+    (file_path_arg and directory_path_arg)
+    or (watch_arg and file_path_arg)
+    or (watch_arg and directory_path_arg)
 ):
     parser.error(
         "incompatible options: file & directory or watch can't be used at the same time"
     )
 
-print(level, directory_path, file_path, watch)
-
-file_path = Path.home() / file_path
+file_path = Path.home() / file_path_arg
 command = subprocess.run(
     ["python3", "pdfid", file_path], capture_output=True, text=True
 )
 
-data_lines = command.stdout.splitlines()[2:]
 
-# Pretty subprocess (pdfid) output
-keyword_counts = {}
-for line in data_lines:
-    # Strip whitespace
-    line = line.strip()
-    if not line:
-        continue
-    # Split by whitespace, maxsplit=1 to separate key and value
-    parts = line.split(maxsplit=1)
-    if len(parts) == 2:
-        key, value = parts
-        try:
-            keyword_counts[key] = int(value)
-        except ValueError:
-            # Not a number, ignore or handle differently
-            pass
+def pretty_output(head=False):
+    data_lines = command.stdout.splitlines()
+    if not head:
+        data_lines = data_lines[:2]
+
+    # Pretty subprocess (pdfid) output
+    keyword_counts = {}
+    for line in data_lines:
+        # Strip whitespace
+        line = line.strip()
+        if not line:
+            continue
+        # Split by whitespace, maxsplit=1 to separate key and value
+        parts = line.split(maxsplit=1)
+        if len(parts) == 2:
+            key, value = parts
+            try:
+                keyword_counts[key] = int(value)
+            except ValueError:
+                # Not a number, ignore or handle differently
+                pass
+
+    return keyword_counts
 
 
 # Level 1
@@ -110,14 +114,12 @@ def level_1(dict):
         print("Suspicous Items Found:\n")
 
 
-if level == 1:
+if level_arg == 1:
+    keyword_counts = pretty_output()
     level_1(keyword_counts)
 
-# for keyword in keyword_counts:
-#     print(keyword, keyword_counts[keyword])
-
-# for node in xml_doc.getElementsByTagName('Keyword'):
-#     if node.getAttribute("Name") in ['/JS', "/JavaScript", "/AA", "/OpenAction"]:
+# for node in command.getElementsByTagName("Keyword"):
+#     if node.getAttribute("Name") in ["/JS", "/JavaScript", "/AA", "/OpenAction"]:
 #         name = node.getAttribute("Name")
 #         count = node.getAttribute("Count")
 #         print(f"{name}: {count}")
