@@ -4,8 +4,10 @@
 
 1. clone
 2. `source venv/bin/activate`
-3. check todo.md and pick a task
-4. code
+3. `pip install pdfid`
+4. check todo.md and pick a task
+5. create a branch for yourself
+6. code
 
 if you found anything
 1. Add your findings about suspicious pdfs and how to stop them in the doc
