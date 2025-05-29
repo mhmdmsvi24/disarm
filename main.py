@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 from pdfid.pdfid import PDFiD
+from utils.filter_xml import filter_xml_keywords
 
 
 class CustomArgumentParser(argparse.ArgumentParser):
@@ -76,10 +77,7 @@ elif not file_path_arg and not directory_path_arg:
 result = None
 if level_arg == 1:
     keyword_counts = PDFiD(file_path_arg)
-    result = keyword_counts
+    xml_obj = keyword_counts
+    result = filter_xml_keywords(xml_obj)
 
-for node in result.getElementsByTagName("Keyword"):
-    if node.getAttribute("Name") in ["/JS", "/JavaScript", "/AA", "/OpenAction"]:
-        name = node.getAttribute("Name")
-        count = node.getAttribute("Count")
-        print(f"{name}: {count}")
+print(result)
