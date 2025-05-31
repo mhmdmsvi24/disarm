@@ -1,3 +1,5 @@
 1. [Let's write a PDF file by Ange Albertini](https://speakerdeck.com/ange/lets-write-a-pdf-file)
 2. [Ange Albertini Video series about file formats](https://www.youtube.com/watch?v=q6KgFezu8tw&list=PL2-EpKoPE60Vh6z5zUOn6KRxB55NitlJf&index=23)
-3. 
+3. If you want to go nightmare mode you can read more about [GhostScript](https://www.ghostscript.com/)
+4. [PDF Tools](https://gist.github.com/maehr/dda79ba3604f462c0f214709c9272a94)
+5. [MuPDF - MuTool](https://mupdf.com/)
