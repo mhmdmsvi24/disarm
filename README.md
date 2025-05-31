@@ -15,15 +15,8 @@ if you found anything
 
 ## suspicious pdf file attributes
 
-1. The two following indicate that the PDF document contains JavaScript. Almost all malicious PDF documents that I’ve found in the wild contain JavaScript (to exploit a JavaScript vulnerability and/or to execute a heap spray). Of course, you can also find JavaScript in PDF documents without malicious intend.
-
-- /JS
-- /JavaScript
-
-2. The two following indicate an automatic action to be performed when the page/document is viewed. All malicious PDF documents with JavaScript I’ve seen in the wild had an automatic action to launch the JavaScript without user interaction.
-
-- /AA
-- /OpenAction
+To learn more about PDF documents checkout [Didar Stevens Personal Website](https://blog.didierstevens.com/programs/pdf-tools/),
+the current research section is also got a handbook of this website
 
 ## PDFiD output
 
@@ -52,6 +45,23 @@ if you found anything
     <Keyword Name="/Colors &gt; 2^24" Count="0" HexcodeCount="0"/>
 </Keywords>
 ```
+## Research
+
+1. The two following indicate that the PDF document contains JavaScript. Almost all malicious PDF
+   documents that I’ve found in the wild contain JavaScript (to exploit a JavaScript vulnerability
+   and/or to execute a heap spray). Of course, you can also find JavaScript in PDF documents without
+   malicious intend.
+
+- /JS
+- /JavaScript
+
+1. The two following indicate an automatic action to be performed when the page/document is viewed.
+   All malicious PDF documents with JavaScript I’ve seen in the wild had an automatic action to
+   launch the JavaScript without user interaction, The combination of automatic action  and
+   JavaScript makes a PDF document very suspicious.
+
+- /AA
+- /OpenAction
 
 that currently for level 1 we only need:
 
@@ -59,3 +69,28 @@ that currently for level 1 we only need:
 - /JavaScript
 - /AA
 - /OpenAction
+
+1. `/page`: another indiction of a malicious pdf can be `/page` if the document only contains 1 page
+   there's a chance for malicious activity
+2. `/ObjStm`: object stream can also be used to contain other objects
+3. `/RichMedia`: for embeded flash
+
+
+### `incremental updates`:
+Legitimate Feature, Abused for Attacks: Incremental updates are a standard PDF feature that allows
+appending changes (e.g., signatures, annotations) without modifying the original content. However,
+attackers exploit this to:
+
+1. Bypass Signature Validation: Append malicious content (scripts, pages, or code) after a valid
+digital signature. The signature remains valid because the original content is untouched, but
+the new content executes when opened.
+2. Hide Malicious Layers: Add obfuscated JavaScript or exploits incrementally, making analysis
+harder.
+3. Evil Annotation Attack (EAA) and Sneaky Signature Attack (SSA): These techniques use incremental
+updates to overlay malicious content (e.g., fake UI elements, hidden scripts) on certified/signed
+PDFs. Users see the malicious overlay, while the PDF appears valid.
+4. Incremental Saving Attack (ISA): Attackers append unsigned content (e.g., malicious JavaScript,
+embedded payloads) after the signature. Many PDF readers fail to detect these unauthorized
+updates, allowing code execution.
+5. Obfuscation via Revision History: Malware authors trial different exploit versions via
+incremental updates, creating a "revision history" that complicates reverse engineering.
