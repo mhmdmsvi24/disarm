@@ -1,6 +1,7 @@
 import argparse
 import sys
 from pathlib import Path
+from xml.dom.minidom import parse, parseString
 
 from pdfid.pdfid import PDFiD
 from utils.filter_xml import filter_xml_keywords
