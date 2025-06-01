@@ -1,0 +1,135 @@
+%%PDF-1.7
+1 0 obj
+<<
+    /Type /Catalog 
+    /Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+    /Type /Pages
+    /Kids [3 0 R 5 0 R]
+    /Count 2
+>>
+endobj
+
+3 0 obj
+<<
+    /Type /Page 
+    /Parent 2 0 R
+    /Resources << 
+        /Font << 
+            /F1 99 0 R
+        >> 
+    >> 
+    /Contents [
+        4 0 R
+    ]
+>>
+endobj
+
+99 0 obj
+<</Type /Font /Subtype /Type1 /BaseFont /Arial>> 
+endobj
+
+4 0 obj
+    <</Length 412>>
+    stream
+        BT
+            /F1 48 Tf
+            105 720 Td
+            (PDF For Dummies) Tj
+        ET
+        BT
+            /F1 16 Tf
+            190 680 Td
+            (Creating PDFs but in a fun way) Tj
+        ET
+        BT
+            /F1 28 Tf
+            100 60 Td
+            (Created by: Mohammad Mousavi) Tj
+        ET
+        BT
+            /F1 16 Tf
+            260 20 Td
+            (1 June 2025) Tj
+        ET
+        1 w
+        10 10 m
+        600 10 l
+        S
+    endstream
+endobj
+
+5 0 obj
+    <<
+        /Type /Page
+        /Parent 2 0 R
+        /Resources <<
+            /Font <<
+                /F1 99 0 R
+            >> 
+        >>
+        /Contents [
+            6 0 R
+        ]
+        /Annots [7 0 R]
+    >>
+endobj
+
+6 0 obj
+    <</Length 0>>
+    stream
+        BT
+            /F1 24 Tf
+            -80 720 Td
+            (
+                PDF Basics series by Angeal Albertini Part 1
+            ) Tj
+        ET
+        BT
+            /F1 16 Tf
+            -40 680 Td
+            (
+                NOTE
+            ) Tj
+        ET
+        BT
+            /F1 14 Tf
+            -30 650 Td
+            (
+                This series contain many PDF slides that you can find in his GitHub
+            ) Tj
+        ET
+        BT
+            /F1 14 Tf
+            -30 620 Td
+            (
+                Angea Albertini Github
+            ) Tj
+        ET
+    endstream
+endobj
+
+7 0 obj
+<<
+    /Type /Annot
+    /Subtype /Link
+    /Rect [35 630 170 635]
+    /Border [0 0 0]
+    /A <<
+        /S /URI
+        /URI (https://github.com)
+    >>
+>>
+endobj
+
+xref
+trailer
+%trailer here
+<</Root 1 0 R /Size 5>>
+startxref
+%startxref here
+%%EOL

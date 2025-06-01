@@ -57,8 +57,11 @@ that currently for level 1 we only need:
    there's a chance for malicious activity
 4. `/ObjStm`: object stream can also be used to contain other objects
 5. `/RichMedia`: for embeded flash
-6. `xref`: missing xref table may be a reason for poorly edited pdf file for malicious activity
+6. `xref`: missing xref table may be a reason for poorly edited pdf file for malicious activity or
+   it may result in slow loading time that can be measured
 7. `/Filter`: filter dict to hide malicious output using encoding
+8. Finding URIs and links
+9. Decoding for human readable form
 
 
 ### `incremental updates`:
