@@ -71,6 +71,9 @@
    object so when we want to reference to an object we declare: `objNumber objGen R` the uppercase
    `R` means reference.
 
+   also note that ObjGen always (%99) is 0 and objNumber is based on how many objects you create
+   and they are kinda your objects plate number.
+
 7. file body: file body is sequence of indirect objects (order doesn't matter), note that a PDF
    document is defined by tree of objects
 
@@ -91,71 +94,39 @@
 ## Creating our first document
 
 the object that `/Root` points to is a special object that refers to the page tree via pages name
-and pages referes to another object that must've `/Type` key assigned to `/Pages` value and it
-will define it related objects as `/Kids` key that will contain the that specific page object
+and pages referes to another object that must've `/Type` key assigned to `/Catalog` value and it
+will define it related objects as `/Kids` key that will contain the specific page object
 reference in an array, if the Kids dict has many children it must be defined in `/Kids` dict
 
-so as a recap obj 1 is a catalog that `/Root` points to and it contains `/Pages` that will point
-to obj 2 that has `/Kids` and `/Count`.
+so as a recap obj 1 is a `/Catalog` that `/Root` points to and it contains `/Pages` name object that
+will point to obj 2 that has `/Kids` and `/Count`.
+
+to be more clear let's describe it like this: there must be a Root object in the document that our
+trailer points to, then the root document has `/Type` of `/Catalog` name objects, think of it as a
+catalog that has many pages and you define each page one by one to create a catalog about your
+university.
+
+The root object and the owner of catalog is a wrapper around another object that will define our
+catalog pages with specific `/Kids` name object.
+
+The `/Count` name object defiens the number of pages your PDF will have, change it to see how many
+pages your PDF viewer shows.
 
 ```
 %PDF-1.3
+
 1 0 obj
-<< /Type /Catalog /Pages 2 0 R>>
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
 endobj
 
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
-endobj
-xref
-%xref table here
-trailer
-<< /Root 1 0 R>>
-startxref
-%%EOL
-```
-
-now we need to define our `/Kids` that is a dict with `/Type` of `/Page` and you must declare its
-parents `/Parent` that is obj 2.
-
-after all of these now we need to define resources for each page, it might not make sense at first
-but imagine a word document where you create a text box with a Arial font and another box below it
-with other fonts all of these things are objects that have their own resources.
-
-If you recall from the beginning a PDF document contains static resources for everything, like a
-HTML document with images, etc that don't have JS yet so everything is staticly defined.
-
-Lets try to mimic adding a textbox in our word document gui for this we must add an object that must
-define it's `/Parent` page so it's basically telling where this gonna reside, after that we'll
-define our static resources for this particular object (remember everything has its own static
-resources), so we start with `/Resources` key that has an object as value this object contains:
-`/Font` key that also gets an object related to `/Font` resources the first one is the name that is
-`/F1` key followed by another object value that contains `<< /F1 << /Type /Font /Subtype /Type1
-/BaseFont /Arial >>`, the first two is keys you can already guess followed by `/BaseFont` that is
-the font you want to use for this text box.
-
-the next thing we need to define is the actuall content of this textbox with `/Content` that refers
-to another object that we'll create.
-
-So for a recap we declared a `/Catalog` that contain `/Pages` (it's catalog of pages) then we
-defined first page and what it contains that is obj 3, this object is properties of our page object
-that will contain other objects such as texts that we will define as `/Contents`.
-
-```
-%PDF-1.3
-1 0 obj
-<< /Type /Catalog /Pages 2 0 R>>
-endobj
-
-2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
-endobj
-
-3 0 obj
-<< /Type /Page /Parent 2 0 R
-/Resources << /Font << /F1 << /Type /Font
-/Subtype /Type1 /BaseFont /Arial >> >> >>
-/Contents 4 0 R
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
 >>
 endobj
 
@@ -167,24 +138,178 @@ startxref
 %%EOL
 ```
 
-## Introduction to streams
+`/Kids` is an array that contains the reference to the object that children object.
 
-So far everything is text, but a question arises here what about images and gifs or other static
-contents (Binary Data ) ???
+Lets declare the children object that starts with `/Type` of `/Page` name objects and then
+declare `/Parent` name object that defines whom this kid is related to, that is object 2 here (the
+page parent).
 
-Stream Objects are objects what contain whatever you want stream object contains a stream `:)` that
-comes after the first dict, note that streams can contain anything.
+```
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+>>
+```
 
-Back to the first dict in it will contain the `/Length` key that can assigned with another object or
-a number that is length of binray data in the stream like (`/Length 5 0 R`) but for now we don't
-need it.
+> [!Note]
+> When a dict contains many name objects they are actually key/value pairs so the above code reads
+> as follows: `/Type` of `/Page`, `/Parent` of `2 0 R`, they key can be anything a dict, a name
+> object, literal number, string, etc...
 
-The Stream contains other things such as `BT` (begin text) and `ET` (end text) inside of these
+After all of these now we need to define resources for each page, it might not make sense at first
+but imagine a word document where you create a text box with a Arial font and another box below it
+with other type of fonts now think of all of these textboxs as objects that have their own resources
+staticly defined for each one separetly.
+
+If you recall from the beginning, a PDF document contains static resources for everything, like a
+HTML document with images, etc that don't have any JS yet so everything is staticly defined.
+
+Lets try to mimic adding a textbox in our word document gui step by step:
+
+1. Select page where you want to add textbox
+2. Draw the textbox where you want
+3. Type what you want
+4. Adjust the font type based on your preference
+
+When creating a PDF file it's a little different than that but almost the same idea.
+
+For this we must add an object that must define it's `/Parent` page so it's basically telling where
+its gonna reside, then we'll define our static resources for this particular object (remember
+everything has its own static resources), so we start with `/Resources` name object followed by a
+dict that contains:
+
+- `/Font`: name object that that will define this particular textbox font
+followed by a dict as its value that has =>
+- `/F1`: name object that is our font resource identifier
+followed by a dict as its value that has =>
+- `/Type` of `/Font`, `/Subtype` of `/Type` and `/BaseFont` of `/Arial`
+- `/Contents` of `4 0 R`: 4 0 R here is an object that we'll define later to declare what the
+  textbox will have inside it.
+
+```
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Arial >> >> >>
+/Contents 4 0 R
+>>
+endobj
+```
+
+`/Resources` name object is kinda messy but you'll get used to it for better clearity in you mind
+look at it like this:
+
+1. `/Resources` = `<< /Font >>`
+2. `/Font` = `<< /F1 >>`
+3. `/F1` = `<< /Type: /Font, /Subtype: /Type1, /BaseFont: /Arial >>`
+
+The above syntax separeted with comma and colon is not correct and it's just for clearity.
+
+Now you can Kinda get it what happenes when you create a textbox in your word/pdf document editor.
+
+The next thing we need to define is actuall content of the textbox with `/Content` that refers
+to another object that we'll create.
+
+So for a recap we declared a `/Catalog` that contain `/Pages` (it's catalog of pages) then we
+defined first page and what it contains that for now is obj 3, this object is properties of our
+page object that will contain other objects such as texts that we will define as `/Contents`.
+
+```
+%PDF-1.3
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+% The code is indented for better readability
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/Resources <<
+    /Font
+        <<
+            /F1
+                <<
+                    /Type /Font
+                    /Subtype /Type1
+                    /BaseFont /Arial
+                >>
+            >>
+        >>
+    /Contents 4 0 R
+>>
+endobj
+
+xref
+%xref table here
+trailer
+<< /Root 1 0 R>>
+startxref
+%%EOL
+```
+
+### Introduction to streams
+
+So far everything is text, but a question arises here, what about images and gifs or other static
+contents (Binary Data) ?
+
+Stream Objects are objects what contain whatever you want, stream object contains a stream `:)` that
+comes after the first dict, note that streams can contain anything and they start with inside our
+object that we created for our text:
+
+```
+4 0 obj
+<<
+    % empty for now
+>>
+stream
+    % stream data
+endstream
+endobj
+```
+
+Back to the first dict, it will contain the `/Length` key that can assigned with another object like
+`/Length 5 0 R` or a literal number that is length of binray data in the stream but for now it's not
+requried.
+
+The Stream contains other things such as `BT` (begin text) and `ET` (end text), inside of these
 operators we'll define `Tf` (text font) that takes two parameters: `/F1 100 Tf`, first parameter
 is the font resource in the page we declared previously and latter the font size.
 
 Another operator that we need for the font is the location of the text for that we use `Td` operator
 that takes the cordinates: `x y Td`: `10 400 Td`
+
+- x: offset from left
+- y: offset from bottom
+
+`0 0 Td`: will put text in the extreme bottom left
+
+```
+4 0 obj
+    <<
+        % empty for now
+    >>
+    stream
+        BT
+            /F1 100 Tf
+            10 400 Td
+        ET
+    endstream
+endobj
+```
 
 The final requirement is the text itself that can be literal string, parenthesis, white space and
 standard escaping `\n`, `\r\n`, note that escaping is in octal (Hell\147 World).
@@ -193,20 +318,33 @@ To declare the Text string we use `Tj` operator that takes the litral string ins
 
 ```
 4 0 obj
-<< >>
+    <<
+        % The length here is 43 (88 with indentation) to aquire it you must count the offset
+        % starting from `BT` down to the `ET` and you code editor will count it for you
+        /Length 43
+    >>
 
-stream
-BT
-/F1 100 Tf
-10 400 Td
-(Hello World) Tj
-ET
-endstream
-
+    stream
+        BT
+            /F1 100 Tf
+            10 400 Td
+            (Hello World!) Tj
+        ET
+    endstream
 endobj
 ```
 
-Finally:
+Now let's go back to our stream empty dict that is more about information about the stream, here
+we must declare `/Length` key and it value must be the whole character length of the stream starting
+from `BT` down to the `ET`, to calculate that highlight it follows:
+
+![Highlight](../../static/01-stream-length.png)
+
+then in your editor you can see the number of characters selected like this:
+
+![Selected](../../static/01-stream-length-selected.png)
+
+### Finally:
 
 ```
 %PDF-1.3
@@ -227,7 +365,9 @@ endobj
 endobj
 
 4 0 obj
-<< >>
+<<
+/Length 44
+>>
 
 stream
 BT
@@ -250,16 +390,6 @@ trailer
 > as __Do you want to save the changes__ while you want to close it this means that the file is not
 > perfect enough.
 
-Now let's go back to our stream empty dict that is more about information about the stream, here
-we must declare `/Length` key and it value must be the whole character length of the stream starting
-from `BT` down to the `ET`, to calculate that highlight it follows:
-
-![Highlight](../static/01-stream-length.png)
-
-then in your editor you can see the number of characters selected like this:
-
-![Selected](../static/01-stream-length-selected.png)
-
 ```
 4 0 obj
 << /Length 44 >>
@@ -280,9 +410,14 @@ Now our page contents is finished.
 > so any changes will be appeared live, you can download it [here](https://github.com/sumatrapdfreader/sumatrapdf/releases)
 > for linux you must build it yourself.
 
+### Cross Reference table
 
-Now it's time for xref table we declared 4 objects plus 1 object that PDFs define themselves and
-its null so basically we have `n + 1` objects.
+The xref table in a PDF file maps each indirect object number to the byte offset where that object
+starts in the file. This allows PDF readers to quickly locate and load objects without scanning the
+entire file.
+
+we declared 4 objects plus 1 object that PDFs define by iteslf and its null so basically we have
+`n (creted by us) + 1 (global)` objects.
 
 ```
 %PDF-1.3
@@ -315,18 +450,46 @@ endobj
 
 xref
 0 5
-000000000000 65535 f\0x20
-000000000010 00000 n\0x20
-000000000059 00000 n\0x20
-000000000115 00000 n\0x20
-000000000265 00000 n\0x20
 
 trailer
 << /Root 1 0 R /Size 5 >>
 ```
 
-As you can see in the code we defined 5 tables the first line `0 5` defines the number of tables
-we will define, the first table is the global table with flag of `f` that means free.
+The `0 5` — indicates that the table entries start at object number 0 and cover 5 objects (object
+numbers 0 through 4).
+
+Each entry in the xref table is exactly 20 bytes long and follows this fixed format:
+`nnnnnnnnnnn ggggg n/f \r\n`.
+
+```
+xref
+0 5
+000000000000 65535 f\0x20
+000000000010 00000 n\0x20
+000000000059 00000 n\0x20
+000000000115 00000 n\0x20
+000000000265 00000 n\0x20
+```
+
+| Part        | Description                                                       | Length(chars offset) |
+| ----------- | ----------------------------------------------------------------- | -------------------- |
+| nnnnnnnnnnn | Byte offset of the object in the file (padded with leading zeros) | 10                   |
+| ggggg       | Generation number of the object (padded with leading zeros)       | 5                    |
+| n or f      | Entry status: n = in-use, f = free (unused)                       | 1                    |
+| \r\n or \n  | End-of-line characters (not shown in your snippet)                | 2                    |
+
+Summary:
+
+| Field           | Meaning                                                                          |
+| --------------- | -------------------------------------------------------------------------------- |
+| 10-digit number | The exact byte offset (starting position) of the object in the PDF file. Leading |
+zeros pad it to 10 characters.
+|5-digit number|	The generation number of the object, padded with leading zeros. Usually 00000
+for most objects; 65535 is special for free objects.|
+|1-letter flag|	n means the object is in use; f means the object is free (not currently used).|
+|Space (0x20)|	Separator between fields (space character).|
+
+the first table is the global table with flag of `f` that means free.
 
 You can see 3 columns in the tables the first column is the offset column and you must calculate
 each object offset like this:
@@ -372,3 +535,7 @@ like `/ASCIIHexDecode` that takes any content and turns it into pure ascii that 
 tricks with it or `/FlateDecode` that implements ZIP compression and outputes HEX and it's not
 editable but we can stack both to `/Filter [/ASCIIHexDecode, /FlateDecode]` to get both compression
 and ascii output
+
+Try to implement more complex structure by yoursef there's also a version of mine: [Project](../PDFs/01-basic.pdf)
+Each time I also do a little overwork and implement some extra features that is not mentioned yet
+you don't need them just seeing them and getting used to the syntax is enough.

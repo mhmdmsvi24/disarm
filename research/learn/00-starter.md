@@ -23,3 +23,6 @@ As part of my research best practices, I maintain a [sources](../sources.md) fil
 references and materials I consult. Additionally, I have created a [docs](../docs/) section
 containing notes and handy resources to enhance my understanding and to test my knowledge about PDF
 learning and exploitation, which will aid in implementing effective exploit prevention.
+
+Also There's folder called [PDFs](../learn/PDFs) that is final projects of each section I've done
+myself you can check them out there are some sweet content there too.
