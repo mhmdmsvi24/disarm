@@ -1,25 +1,39 @@
-# secure-pdf
+# Disarm
 
-## contribute
+Disarm is a PDF security tool designed to identify various PDF exploits and cleanse malicious content. This project is part of my university research focused on understanding PDF vulnerabilities and developing practical defenses against them.
 
-1. clone
-2. `source venv/bin/activate`
-3. `pip install pdfid`
-4. check todo.md and pick a task
-5. create a branch for yourself
-6. code
+## Contributing
 
-if you found anything
-1. Add your findings about suspicious pdfs and how to stop them in the doc
-2. add it as todo if contributers agreed upon
+Thank you for your interest in contributing! To get started:
 
-## Read More
+1. Clone the repository.
+2. Activate the virtual environment:
+   ```
+   source venv/bin/activate
+   ```
+3. Install the required tool:
+   ```
+   pip install pdfid
+   ```
+4. Check the [todo.md](./TODO.md) file and pick a task.
+5. Create a new branch for your work.
+6. Start coding!
 
-To learn more about PDF documents checkout [Didar Stevens Personal Website](https://blog.didierstevens.com/programs/pdf-tools/),
-the current research section is also got a handbook of this website
+If you discover anything new or suspicious:
 
-This project is a research to learn about PDFs and it's basically a university project all of the
-researches and findings about PDFs and this project is in the [research](./research/) folder that
-contains [docs](./research/docs/) with random content and notes while [learn](./research/learn/) is
-a dialy diary of my own understanding it also contains [sources.md](./research/soruces.md) that
-contains all the learning materials, tools, etc I touched and may use in the project.
+1. Document your findings about suspicious PDFs and how to mitigate them in the project documentation.
+2. Propose adding the task to the todo list if contributors agree.
+
+## Research and Learning
+
+This project serves as a research platform to deepen understanding of PDF documents and their security issues. All research materials and findings are organized in the [research](./research/) folder:
+
+- [docs](./research/docs/) contains notes and assorted content.
+- [learn](./research/learn/) is a daily documentation of my learning process.
+- [sources.md](./research/sources.md) lists all learning materials, tools, and references used throughout the project.
+
+## Acknowledgements
+
+This project leverages tools developed by Didier Stevens, notably [pdfid](https://blog.didierstevens.com/programs/pdf-tools/) and pdf-parser, which have been instrumental in analyzing PDF files. For more insights into PDF security, his website and research handbook are excellent resources.
+
+Feel free to reach out if you have questions or want to collaborate!
