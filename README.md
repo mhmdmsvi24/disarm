@@ -1,6 +1,8 @@
 # Disarm
 
-Disarm is a PDF security tool designed to identify various PDF exploits and cleanse malicious content. This project is part of my university research focused on understanding PDF vulnerabilities and developing practical defenses against them.
+Disarm is a PDF security tool designed to identify various PDF exploits and cleanse malicious
+content. This project is part of my university research focused on understanding PDF vulnerabilities
+and developing practical defenses against them.
 
 ## Contributing
 
@@ -26,14 +28,20 @@ If you discover anything new or suspicious:
 
 ## Research and Learning
 
-This project serves as a research platform to deepen understanding of PDF documents and their security issues. All research materials and findings are organized in the [research](./research/) folder:
+This project serves as a research platform to deepen understanding of PDF documents and their
+security issues. All research materials and findings are organized in the [research](./research/)
+folder:
 
+- [starter](./research/learn/00-starter.md) you can start from here.
 - [docs](./research/docs/) contains notes and assorted content.
-- [learn](./research/learn/) is a daily documentation of my learning process.
-- [sources.md](./research/sources.md) lists all learning materials, tools, and references used throughout the project.
+- [learn](./research/learn/) is a daily documentation of my learning process start from [here](./research/learn/01-about-pdfs)
+- [sources.md](./research/sources.md) lists all learning materials, tools, and references used
+  throughout the project.
 
 ## Acknowledgements
 
-This project leverages tools developed by Didier Stevens, notably [pdfid](https://blog.didierstevens.com/programs/pdf-tools/) and pdf-parser, which have been instrumental in analyzing PDF files. For more insights into PDF security, his website and research handbook are excellent resources.
+This project leverages tools developed by Didier Stevens, notably [pdfid](https://blog.didierstevens.com/programs/pdf-tools/)
+and pdf-parser, which have been instrumental in analyzing PDF files. For more insights into PDF
+security, his website and research handbook are excellent resources.
 
 Feel free to reach out if you have questions or want to collaborate!
